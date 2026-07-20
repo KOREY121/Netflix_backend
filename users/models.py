@@ -1,12 +1,9 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager,PermissionsMixin
-from django.db import models
-
 
 
 class UserManager(BaseUserManager):
-    def create_user(self,email,name,password=None, **extra):
+    def create_user(self, email, name, password=None, **extra):
         if not email:
             raise ValueError('Email is required')
         email = self.normalize_email(email)
@@ -14,28 +11,34 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
-    
+
     def create_superuser(self, email, name, password=None, **extra):
-        email = models.EmailField(unique=True)
-        name = models.CharField(max_length=150)
-        subscription = models.ForeignKey(
-            'subscriptions.Subscription',
-            on_delete= models.SET_NULL,
-            nul=True, blank=True,
-            related_names ='users',
-        )
-        is_active = models.BooleanField(default=True)
-        is_staff = models.BooleanField(default=False)
-        created_at = models.DateTimeField(auto_now_add=True)
-        updated_at = models.DateTimeField(auto_now=True)
+        extra.setdefault('is_staff', True)
+        extra.setdefault('is_superuser', True)
+        return self.create_user(email, name, password, **extra)
 
-        objects = UserManager()
 
-        USERNAME_FIELD = 'email'
-        REQUIRED_FIELDS = ['name']
+class User(AbstractBaseUser, PermissionsMixin):
+    email        = models.EmailField(unique=True)
+    name         = models.CharField(max_length=150)
+    subscription = models.ForeignKey(
+        'subscriptions.Subscription',
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
+        related_name='users',
+    )
+    is_active  = models.BooleanField(default=True)
+    is_staff   = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-        class Meta:
-            db_table = 'users'
+    objects = UserManager()
 
-        def __str__(self):
-            return f'{self.name} <{self.email}>'
+    USERNAME_FIELD  = 'email'
+    REQUIRED_FIELDS = ['name']
+
+    class Meta:
+        db_table = 'users'
+
+    def __str__(self):
+        return f'{self.name} <{self.email}>'
