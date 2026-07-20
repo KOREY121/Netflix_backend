@@ -70,7 +70,7 @@ class SearchHistory(models.Model):
     searched_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_tables ='search_history'
+        db_table ='search_history'
 
     def __str__(self):
         return f'{self.profile.name} → "{self.query_text}"'
