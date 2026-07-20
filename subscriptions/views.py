@@ -18,4 +18,4 @@ class BillingHistoryView(generics.ListAPIView):
     def get_queryset(self):
         return BillingHistory.objects.filter(
             user=self.request.user
-        ).select_related('subscription')
+        ).select_related('subscription').order_by('-created_at')
