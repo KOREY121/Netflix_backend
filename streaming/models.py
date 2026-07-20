@@ -24,10 +24,10 @@ class StreamingSession(models.Model):
         ACTIVE = 'active', 'Active'
         ENDED = 'ended', 'Ended'
 
-    profile = models.ForeignKey('profies.Profile', on_delete=models.CASCADE)
-    device = models.ForeignKey( Device, on_delete=models.SET_NULL)
-    content = models.ForeignKey('content.Contet', on_delete=models.SET_NULL)
-    episode = models.ForeignKey('content.Episode', on_delete=models.SET_NULL)
+    profile = models.ForeignKey('profiles.Profile', on_delete=models.CASCADE)
+    device = models.ForeignKey( Device, on_delete=models.CASCADE)
+    content = models.ForeignKey('content.Content', on_delete=models.CASCADE)
+    episode = models.ForeignKey('content.Episode', on_delete=models.CASCADE)
     start_time = models.DateTimeField(auto_now_add=True)
     end_time = models.DateTimeField(null=True, blank= True)
     status = models.CharField(max_length=15, choices=Status.choices, default=Status.ACTIVE)
