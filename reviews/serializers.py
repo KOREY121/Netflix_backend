@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Review, MyList, Recomendation
+from .models import Review, MyList, Recommendation
 
 class ReviewSerializer(serializers.ModelSerializer):
     profile_name = serializers.CharField(source='profile.name', read_only= True)
@@ -23,10 +23,10 @@ class MyListSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'added_at']
         
 
-class RecomendationSerializer(serializers.ModelSerializer):
+class RecommendationSerializer(serializers.ModelSerializer):
     content_title = serializers.CharField(source='content.title', read_only= True)
     thumbnail_url =serializers.URLField(source= 'content.thumbnail_url', read_only= True)
 
     class Meta:
-        models = Recomendation
+        models = Recommendation
         fields = ['id', 'content', 'content_title', 'thumbnail_url', 'score', 'generated_at']
